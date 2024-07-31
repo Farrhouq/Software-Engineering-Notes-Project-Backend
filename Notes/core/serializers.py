@@ -28,6 +28,11 @@ class LabelSerializer(serializers.ModelSerializer):
         label.user = user
         label.save()
         return label
+    
+    def update(self, instance, validated_data):
+        instance.color = validated_data.get('color', instance.color) # only color can be updated for a label
+        instance.save()
+        return instance
 # serializer for the note class
 class NoteSerializer(serializers.ModelSerializer): 
     author = serializers.CharField()
@@ -37,7 +42,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Note
-        fields = ['id','author', 'label', 'title', 'brief', 'content', 'created', 'modified', 'can_edit', 'private']
+        fields = ['id','author', 'label', 'title', 'brief', 'private', 'content', 'created', 'modified', 'can_edit']
         
     def create(self, validated_data):
         # removing the nested label and author objects and saving them separately
